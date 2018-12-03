@@ -130,32 +130,40 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     applicationContext)
         }
 
+        fun startOfWalk(){
+            if(!collectFlag)
+            {
+                startTime = SystemClock.elapsedRealtime()
+                id_collect.text =
+                        resources.getString(R.string.collectingData)
+                collectFlag=true
+            }
+            else
+            {
+                steps = startSteps
+                startSteps=0
+                id_collect.text = resources.getString(R.string.collectData)
+                endTime=SystemClock.elapsedRealtime()
+                collectFlag=false
+            }
+        }
+
+        fun endOfWalk(){
+            fileWriter()
+
+            if(permFlag){
+                uploadFile(url, firebasePath_upload, file)
+            }
+            steps = 0
+        }
+
         fun setClickListeners(){
             id_collect.setOnClickListener{
-                if(!collectFlag)
-                {
-                    startTime = SystemClock.elapsedRealtime()
-                    id_collect.text =
-                            resources.getString(R.string.collectingData)
-                    collectFlag=true
-                }
-                else
-                {
-                    steps = startSteps
-                    startSteps=0
-                    id_collect.text = resources.getString(R.string.collectData)
-                    endTime=SystemClock.elapsedRealtime()
-                    collectFlag=false
-                }
+                startOfWalk()
             }
 
             id_transfer.setOnClickListener {
-                fileWriter()
-
-				if(permFlag){
-					uploadFile(url, firebasePath_upload, file)
-				}
-                steps = 0
+                endOfWalk()
             }
         }
         super.onCreate(savedInstanceState)
