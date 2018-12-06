@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var endTime     : Long=0
     private var currentTime : Long=0
     private var elapsedTime : Long=0
-    private var minutes     : Long=0
+    //private var minutes     : Long=0
     private var seconds     : Long=0
     private var collectFlag : Boolean=false
 
@@ -116,8 +116,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             fh.appendDataFile(filename, ", ",
                     applicationContext)
 
-            fh.appendDataFile(filename, "${minutes}.${seconds}",
-                    applicationContext)
+            //fh.appendDataFile(filename, "${minutes}.${seconds}",
+            //        applicationContext)
+
+            fh.appendDataFile(filename, "$seconds",applicationContext)
 
 			fh.appendDataFile(filename, ", ",
 					applicationContext)
@@ -193,7 +195,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private fun getElapsedTime(){
         currentTime=SystemClock.elapsedRealtime()
         elapsedTime=currentTime-startTime
-        minutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime)
+        //minutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime)
         seconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTime)
     }
 
@@ -211,7 +213,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         stepDetectorTxt.text = startSteps.toString()
         getElapsedTime()
 		getDistance()
-        main_elapsed_time.text = "${minutes} min,${seconds} sec"
+        //main_elapsed_time.text = "${minutes} min,${seconds} sec"
+        main_elapsed_time.text = "${seconds} sec"
         main_distance.text = distanceMeter + " m"
     }
 
@@ -230,21 +233,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url)
         val fileRef = storageRef.child(path)
 
-        //pBar_upload.visibility = View.VISIBLE
-        //pBar_upload.progress = pBar_upload.min
-
         fileRef.putFile(file)
                 .addOnSuccessListener {
-                    //pBar_upload.progress = pBar_upload.max
-                    //pBar_upload.visibility = View.GONE
-					toast("Upload succesful!")
+					toast("Upload successful!")
                 }
                 .addOnFailureListener {
                     Log.e("Upload_error_message", it.message)
                     Log.e("Upload_error_stacktrace",
 							it.stackTrace.toString())
                     Log.e("Upload_error_cause", it.cause.toString())
-					toast("Upload unsuccesful!")
+					toast("Upload unsuccessful!")
                 }
     }
 
