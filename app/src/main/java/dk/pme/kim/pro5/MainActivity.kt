@@ -127,30 +127,26 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 			fh.appendDataFile(filename, distanceMeter,
 					applicationContext)
 
-            //22, 24.53, 500
             fh.appendDataFile(filename, "\n",
                     applicationContext)
         }
 
         fun startOfWalk(){
-            if(!collectFlag)
-            {
-                startTime = SystemClock.elapsedRealtime()
-                id_collect.text =
-                        resources.getString(R.string.collectingData)
-                collectFlag=true
-            }
-            else
-            {
-                steps = startSteps
-                startSteps=0
-                id_collect.text = resources.getString(R.string.collectData)
-                endTime=SystemClock.elapsedRealtime()
-                collectFlag=false
-            }
+            startTime = SystemClock.elapsedRealtime()
+            id_collect.text =
+                    resources.getString(R.string.collectingData)
+            collectFlag=true
         }
 
         fun endOfWalk(){
+            steps = startSteps
+            startSteps=0
+            id_collect.text = resources.getString(R.string.collectData)
+            endTime=SystemClock.elapsedRealtime()
+            collectFlag=false
+        }
+
+        fun transferData(){
             fileWriter()
 
             if(permFlag){
@@ -160,12 +156,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
         fun setClickListeners(){
-            id_collect.setOnClickListener{
-                startOfWalk()
+            id_collect.setOnClickListener {
+                if(!collectFlag)
+                {
+                    startOfWalk()
+                }
+                else
+                {
+                    endOfWalk()
+                }
             }
 
             id_transfer.setOnClickListener {
-                endOfWalk()
+                transferData()
             }
         }
         super.onCreate(savedInstanceState)
